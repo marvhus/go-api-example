@@ -2,26 +2,45 @@ package main
 
 import (
     "fmt"
-    "go-api-example/src/config"
+    "os"
+
     "go-api-example/src/routes"
 
     "github.com/gin-gonic/gin"
+    "github.com/spf13/viper"
 )
 
 func main() {
-    config, err := config.LoadEnvConfig()
-    if err != nil {
-        fmt.Println(err)
-        return
-    }
+    loadConfig(os.Getenv("API_ENV"))
 
     engine := gin.Default()
+    engine.SetTrustedProxies(nil)
+
     routes.SetupRoutes(engine)
 
-    engine.SetTrustedProxies(nil)
-    engine.Run(fmt.Sprintf(":%s", config["port"]))
+    port := viper.GetString("api.port")
+    if port == "" {
+        fmt.Println("Unable to find port in config file.")
+        return
+    }
+    engine.Run(fmt.Sprintf(":%s", port))
 }
 
 func getEcho(ctx *gin.Context) {
     ctx.Data(200, "text/plain", []byte("Pong!"))
+}
+
+func loadConfig(name string) {
+    if name != "test" && name != "prod" {
+        panic(fmt.Errorf("Invalid or missing API_ENV environment variable. Expected 'test' or 'prod'."))
+    }
+    fmt.Printf("Loading config file '%s'\n", name)
+
+    viper.SetConfigName(name)
+    viper.SetConfigType("yaml")
+    viper.AddConfigPath("./config")
+    err := viper.ReadInConfig()
+    if err != nil {
+        panic(fmt.Errorf("Fatal error config file: %w", err))
+    }
 }
