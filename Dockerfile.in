@@ -3,8 +3,9 @@ FROM golang:1.23-alpine
 RUN mkdir /app
 COPY . /app
 WORKDIR /app
+
 RUN go build -o {{TARGET}} .
 
+ENV GIN_MODE=release
 EXPOSE {{PORT}}
-
 CMD [ "/app/{{TARGET}}" ]

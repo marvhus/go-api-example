@@ -1,20 +1,17 @@
 package main
 
 import (
-    "fmt"
-    "io"
-    "net/http"
-    "time"
+    "go-api-example/src/routes"
+
+    "github.com/gin-gonic/gin"
 )
 
-func MainHandler(writer http.ResponseWriter, request *http.Request) {
-    io.WriteString(writer, time.Now().Format("2006-01-02 15:04:05"))
+func main() {
+    engine := gin.Default()
+    routes.SetupRoutes(engine)
+    engine.Run(":8080")
 }
 
-func main() {
-    http.HandleFunc("/", MainHandler)
-
-    fmt.Println("Listening on port 5050...")
-
-    http.ListenAndServe(":5050", nil)
+func getEcho(ctx *gin.Context) {
+    ctx.Data(200, "text/plain", []byte("Pong!"))
 }
