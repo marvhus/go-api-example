@@ -5,7 +5,7 @@ PORT := 5050
 
 .PHONY: run
 run:
-	go run ./src/
+	API_ENV=test go run ./src/
 
 .PHONY: build
 build:
