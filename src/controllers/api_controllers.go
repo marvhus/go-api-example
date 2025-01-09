@@ -1,9 +1,11 @@
 package controllers
 
 import (
+    "net/http"
+
     "github.com/gin-gonic/gin"
 )
 
 func GetPing(ctx *gin.Context) {
-    ctx.Data(200, "text/plain", []byte("Pong!"))
+    ctx.Data(http.StatusOK, "text/plain", []byte("Pong!"))
 }

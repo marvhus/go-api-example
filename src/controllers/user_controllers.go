@@ -2,26 +2,44 @@ package controllers
 
 import (
     "fmt"
+    "net/http"
 
     "github.com/gin-gonic/gin"
 )
 
 type User struct {
-    ID      int    `json:"id"`
+    ID      string `json:"id"`
     Name    string `json:"name" binding:"required"`
     Email   string `json:"email" binding:"required"`
 }
 
-var users []User = []User{}
+var users = []User{}
 
 func GetUsers(ctx *gin.Context) {
-    ctx.JSON(200, users)
+    ctx.JSON(http.StatusOK, users)
+}
+
+func GetUser(ctx *gin.Context) {
+    id := ctx.Param("id")
+
+    for _, user := range users {
+        if user.ID != id {
+            continue
+        }
+
+        ctx.JSON(http.StatusOK, user)
+        return
+    }
+
+    ctx.JSON(http.StatusNotFound, gin.H{
+        "message": fmt.Sprint("Unable to find user with ID '", id, "'."),
+    })
 }
 
 func CreateUser(ctx *gin.Context) {
     if ctx.ContentType() != "application/json" {
-        ctx.JSON(400, gin.H{
-            "message": fmt.Sprintf("Invalid content type.  Expected 'application/json', but got '%s'.", ctx.ContentType()),
+        ctx.JSON(http.StatusBadRequest, gin.H{
+            "message": fmt.Sprint("Invalid content type.  Expected 'application/json', but got '", ctx.ContentType(), "'."),
         })
         return
     }
@@ -33,13 +51,16 @@ func CreateUser(ctx *gin.Context) {
     }
 
     new_user := User{
-        ID: len(users),
+        ID: fmt.Sprint(len(users)),
         Name: received_user.Name,
         Email: received_user.Email,
     }
     users = append(users, new_user)
 
-    ctx.JSON(200, gin.H{
+    ctx.JSON(http.StatusOK, gin.H{
         "message": "Success.",
+        "user": gin.H{
+            "id": new_user.ID,
+        },
     })
 }

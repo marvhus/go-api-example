@@ -15,8 +15,10 @@ func SetupRoutes(engine *gin.Engine) {
 }
 
 func setupUserRoutes(router_group *gin.RouterGroup) {
-    group := router_group.Group("/user")
+    group := router_group.Group("/users")
+
+    group.GET("", controllers.GetUsers)
+    group.GET("/:id", controllers.GetUser)
 
     group.POST("", controllers.CreateUser)
-    group.GET("/list", controllers.GetUsers)
 }
