@@ -9,6 +9,8 @@ import (
 func main() {
     engine := gin.Default()
     routes.SetupRoutes(engine)
+
+    engine.SetTrustedProxies(nil)
     engine.Run(":8080")
 }
 
