@@ -1,0 +1,21 @@
+TARGET := go-api-example
+DOCKER_PORT := 443
+
+### DOCKER ###
+
+#
+# This builds the docker container for the packaged version of the project.
+#
+.PHONY: docker-build
+docker-build:
+	@echo "== Building docker container..."
+	sudo docker build -t $(TARGET) .
+
+#
+# This runs the docker container for the packaged version of the project.
+# Will build the docker container before running.
+#
+.PHONY: docker-run
+docker-run: docker-build
+	@echo "== Running docker container..."
+	sudo docker run -p $(DOCKER_PORT):$(DOCKER_PORT) $(TARGET)
