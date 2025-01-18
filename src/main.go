@@ -23,6 +23,8 @@ func main() {
         fmt.Println("Unable to find port in config file.")
         return
     }
+
+    fmt.Printf("Starting server on port %s...\n", port)
     engine.Run(fmt.Sprintf(":%s", port))
 }
 
