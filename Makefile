@@ -40,6 +40,7 @@ package:
 	@echo "== Packaging up project into $(DIST_DIR)..."
 	mkdir -p $(DIST_DIR)
 	cp -rv ./$(RESOURCES_DIR) ./$(DIST_DIR)/
+	cp -v .env ./$(DIST_DIR)/
 	cp -v Dockerfile.dist ./$(DIST_DIR)/Dockerfile
 	cp -v Makefile.dist ./$(DIST_DIR)/Makefile
 	# Build the server binary and copy it out.
@@ -56,12 +57,12 @@ package:
 #
 .PHONY: docker-build
 docker-build: package
-	$(MAKE) docker-build -C ./$(DIST_DIR)
+	$(MAKE) build -C ./$(DIST_DIR)
 
 #
 # This runs the docker container for the packaged version of the project.
-# Will build the docker container before running.
+# Will package the project before running.
 #
 .PHONY: docker-run
-docker-run: docker-build
-	$(MAKE) docker-run -C ./$(DIST_DIR)
+docker-run: package
+	$(MAKE) run -C ./$(DIST_DIR)

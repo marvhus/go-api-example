@@ -6,8 +6,8 @@ DOCKER_PORT := 443
 #
 # This builds the docker container for the packaged version of the project.
 #
-.PHONY: docker-build
-docker-build:
+.PHONY: build
+build:
 	@echo "== Building docker container..."
 	sudo docker build -t $(TARGET) .
 
@@ -15,7 +15,7 @@ docker-build:
 # This runs the docker container for the packaged version of the project.
 # Will build the docker container before running.
 #
-.PHONY: docker-run
-docker-run: docker-build
+.PHONY: run
+run: build
 	@echo "== Running docker container..."
-	sudo docker run -p $(DOCKER_PORT):$(DOCKER_PORT) $(TARGET)
+	sudo docker run --env-file=.env -p $(DOCKER_PORT):$(DOCKER_PORT) $(TARGET)

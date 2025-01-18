@@ -1,10 +1,7 @@
 # Runs the project.
 
-FROM golang:1.23-alpine
+FROM alpine:latest
 WORKDIR /app
 COPY . .
 
-ENV GIN_MODE=release
-ENV API_ENV=prod
-EXPOSE 443
 CMD [ "/app/server" ]
