@@ -1,0 +1,2 @@
+Makefile.dist linguist-language=Makefile
+Dockerfile.dist linguist-language=Dockerfile
